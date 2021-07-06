@@ -1,8 +1,9 @@
 #include<iostream>
 #include<string>
-#include<vector> 
+#include<vector>
 #include<fstream>
 #include "token.h"
+#include "generator.h"
 
 int main(int argc, char* argv[]) {
     if(argc != 2) {
@@ -17,6 +18,7 @@ int main(int argc, char* argv[]) {
         sourceLines.push_back(line);
     }
     Tokens tokens(sourceLines);
+    /*
     for(Token token : tokens.tokens) {
         switch(token.type) {
             case TokenType::EOL:
@@ -33,4 +35,6 @@ int main(int argc, char* argv[]) {
         }
         std::cout << "'" << token.value << "' )" << std::endl;
     }
+    */
+    Generator generator(tokens);
 }
