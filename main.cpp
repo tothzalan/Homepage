@@ -6,9 +6,9 @@
 #include "generator.h"
 
 int main(int argc, char* argv[]) {
-    if(argc != 2) {
+    if(argc < 2 || argc > 3) {
         std::cout << "Invalid argument(s)!" << std::endl;
-        std::cout << "USEAGE: homepage source.txt" << std::endl;
+        std::cout << "USEAGE: homepage source.txt out.html" << std::endl;
         return 22;
     }
     std::ifstream sourceFile(argv[1]);
@@ -36,5 +36,8 @@ int main(int argc, char* argv[]) {
         std::cout << "'" << token.value << "' )" << std::endl;
     }
     */
-    Generator generator(tokens);
+    if(argc == 3)
+        Generator generator(tokens, argv[2]);
+    else
+        Generator generator(tokens);
 }
