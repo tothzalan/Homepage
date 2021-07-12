@@ -18,8 +18,10 @@ const char* docEnd =
     "\t}\n</style>\n"
     "</html>";
 
-Generator::Generator(Tokens tokens, std::string destFile) {
-    this->generate(tokens, destFile);
+Generator::Generator(Tokens tokens, std::string destFile) : tlmp("template/template.html") {
+    this->fileLines = this->generate(tokens);
+    this->destFile = destFile;
+    this->writeToFile();
 }
 
 std::string createAnchor(std::string href, std::string text) {
@@ -38,36 +40,36 @@ std::string createParagraph(std::string text) {
     return tag;
 }
 
-void Generator::generate(Tokens tokens, std::string destFile) {
-    std::ofstream file;
-    file.open(destFile);
-    file << docStart;
-
+std::vector<std::string> Generator::generate(Tokens tokens) {
+    std::vector<std::string> lines;
     std::vector<std::string> textsBuffer;
+    if(!this->tlmp.foundTemplate) {
+        lines.push_back(docStart);
+    }
     bool isNewLine = true;
     for(int i = 0; i < tokens.tokens.size(); i++) {
         if(isNewLine) {
-            file << "\t\t<div>\n";
+            lines.push_back("\t\t<div>\n");
             isNewLine = false;
         }
         switch(tokens.tokens[i].type) {
             case TokenType::EOL:
                 if(textsBuffer.size() == 2) {
-                    file << createAnchor(textsBuffer[1], textsBuffer[0]);
+                    lines.push_back(createAnchor(textsBuffer[1], textsBuffer[0]));
                 }
                 else if(textsBuffer.size() > 0) {
-                    file << createParagraph(textsBuffer[0]);
+                    lines.push_back(createParagraph(textsBuffer[0]));
                 }
                 textsBuffer.clear();
                 isNewLine = true;
-                file << "\t\t</div>\n";
+                lines.push_back("\t\t</div>\n");
                 break;
             case TokenType::SEP:
                 if(textsBuffer.size() == 2) {
-                    file << createAnchor(textsBuffer[1], textsBuffer[0]);
+                    lines.push_back(createAnchor(textsBuffer[1], textsBuffer[0]));
                 }
                 else if(textsBuffer.size() > 0) {
-                    file << createParagraph(textsBuffer[0]);
+                    lines.push_back(createParagraph(textsBuffer[0]));
                 }
                 textsBuffer.clear();
                 break;
@@ -76,6 +78,22 @@ void Generator::generate(Tokens tokens, std::string destFile) {
                 break;
         }
     }
-    file << docEnd;
-    file.close();
+    if(!this->tlmp.foundTemplate)
+        lines.push_back(docEnd);
+    else {
+        this->tlmp.templateLines.erase(this->tlmp.templateLines.begin()+this->tlmp.startLine);
+        this->tlmp.templateLines.insert(this->tlmp.templateLines.begin()+this->tlmp.startLine, lines.begin(), lines.end());
+        return this->tlmp.templateLines;    
+    }
+    return lines;
+}
+
+void Generator::writeToFile() {
+    std::ofstream file(this->destFile);
+    if(file.is_open()) {
+        for(std::string line : this->fileLines) {
+            file << line;
+        }
+    } else
+        std::cout << "Error opening the destination file" << std::endl;
 }
