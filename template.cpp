@@ -27,13 +27,20 @@ std::vector<std::string> Template::readInTemplate(std::string fileName) {
     }
     std::string line;
     int index = 0;
+    bool foundStart = false;
     while(std::getline(templateFile, line)) {
         lines.push_back(line + "\n");
-        if(trimm(line) == "{::}") {
+        if(trimm(line) == "{::}" && !foundStart) {
             this->startLine = index;
+            foundStart = true;
         }
         index++;
     }
-    this->foundTemplate = true;
+    if(foundStart)
+        this->foundTemplate = true;
+    else {
+        std::cout << "Content template start '{::}' was not found" << std::endl;
+        this->foundTemplate = false;
+    }
     return lines;
 }
