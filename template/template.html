@@ -1,20 +1,42 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Template homepage</title>
+        <title>Homepage</title>
     </head>
     <body>
         {::}
-    <body>
-    <style>
-        html, body {
-            background-color: black;
-            color: white;
-            max-width: 70vw;
-            margin: 0 auto;
+        <div>
+            <input id="input" type="text" placeholder="Search with Google">
+            <button onclick="search()">Go</button>
+        </div>
+    </body>
+<style>
+    html, body {
+        background-color: black;
+        color: white;
+        font-family: "Courier";
+        font-size: 24px;
+        width: 80vw;
+        margin: 0 auto;
+    }
+    a {
+        color: gray;
+    }
+    div * { 
+        margin: 10px;
+        display: inline;
+    }
+</style>
+<script>
+    let input = document.getElementById("input")
+    input.addEventListener("keyup", function(event) {
+        if(event.keyCode == 13) {
+            event.preventDefault()
+            search()
         }
-        a {
-            color: blue;
-        }
-    </style>
+    });
+    function search() {
+        window.open(`https://www.google.com/search?q=${input.value}`)
+    }
+</script>
 </html>
