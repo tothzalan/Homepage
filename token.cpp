@@ -9,7 +9,7 @@ Tokens::Tokens(std::vector<std::string> lines) {
     this->tokens = this->tokenizer(lines);
 }
 
-std::string trim(std::string input) {
+std::string Tokens::trim(std::string input) {
     auto start = input.begin();
     while (start != input.end() && std::isspace(*start)) {
         start++;
@@ -29,12 +29,12 @@ std::vector<Token> Tokens::tokenizer(std::vector<std::string> lines) {
         std::string buffer = "";
         for(char letter : lines[i]) {
             if(letter == '|') { //SEP
-                tokens.push_back(Token(TokenType::TEXT, trim(buffer)));
+                tokens.push_back(Token(TokenType::TEXT, this->trim(buffer)));
                 tokens.push_back(Token(TokenType::SEP));
-                buffer = "";               
+                buffer = "";
             }
             else if(letter == ';') { //CHG
-                tokens.push_back(Token(TokenType::TEXT, trim(buffer)));
+                tokens.push_back(Token(TokenType::TEXT, this->trim(buffer)));
                 tokens.push_back(Token(TokenType::CHG));
                 buffer = "";
             }
@@ -43,7 +43,7 @@ std::vector<Token> Tokens::tokenizer(std::vector<std::string> lines) {
             }
         }
         if(buffer.size() > 0) {
-            tokens.push_back(Token(TokenType::TEXT, trim(buffer)));
+            tokens.push_back(Token(TokenType::TEXT, this->trim(buffer)));
         }
         tokens.push_back(Token(TokenType::EOL));
     }

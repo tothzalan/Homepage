@@ -24,7 +24,7 @@ Generator::Generator(Tokens tokens, std::string destFile) : tlmp("template/templ
     this->writeToFile();
 }
 
-std::string createAnchor(std::string href, std::string text) {
+std::string Generator::createAnchor(std::string href, std::string text) {
     std::string tag = "\t\t\t<a href=\"";
     tag += href;
     tag += "\">";
@@ -33,7 +33,7 @@ std::string createAnchor(std::string href, std::string text) {
     return tag;
 }
 
-std::string createParagraph(std::string text) {
+std::string Generator::createParagraph(std::string text) {
     std::string tag = "\t\t\t<p>";
     tag += text;
     tag += "</p>\n";
@@ -55,10 +55,10 @@ std::vector<std::string> Generator::generate(Tokens tokens) {
         switch(tokens.tokens[i].type) {
             case TokenType::EOL:
                 if(textsBuffer.size() == 2) {
-                    lines.push_back(createAnchor(textsBuffer[1], textsBuffer[0]));
+                    lines.push_back(this->createAnchor(textsBuffer[1], textsBuffer[0]));
                 }
                 else if(textsBuffer.size() > 0) {
-                    lines.push_back(createParagraph(textsBuffer[0]));
+                    lines.push_back(this->createParagraph(textsBuffer[0]));
                 }
                 textsBuffer.clear();
                 isNewLine = true;
@@ -66,10 +66,10 @@ std::vector<std::string> Generator::generate(Tokens tokens) {
                 break;
             case TokenType::SEP:
                 if(textsBuffer.size() == 2) {
-                    lines.push_back(createAnchor(textsBuffer[1], textsBuffer[0]));
+                    lines.push_back(this->createAnchor(textsBuffer[1], textsBuffer[0]));
                 }
                 else if(textsBuffer.size() > 0) {
-                    lines.push_back(createParagraph(textsBuffer[0]));
+                    lines.push_back(this->createParagraph(textsBuffer[0]));
                 }
                 textsBuffer.clear();
                 break;
@@ -83,7 +83,7 @@ std::vector<std::string> Generator::generate(Tokens tokens) {
     else {
         this->tlmp.templateLines.erase(this->tlmp.templateLines.begin()+this->tlmp.startLine);
         this->tlmp.templateLines.insert(this->tlmp.templateLines.begin()+this->tlmp.startLine, lines.begin(), lines.end());
-        return this->tlmp.templateLines;    
+        return this->tlmp.templateLines;
     }
     return lines;
 }

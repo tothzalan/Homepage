@@ -4,7 +4,7 @@ Template::Template(std::string fileName) {
     this->templateLines = this->readInTemplate(fileName);
 }
 
-std::string trimm(std::string input) {
+std::string Template::trim(std::string input) {
     auto start = input.begin();
     while(start != input.end() && std::isspace(*start)) {
         start++;
@@ -30,7 +30,7 @@ std::vector<std::string> Template::readInTemplate(std::string fileName) {
     bool foundStart = false;
     while(std::getline(templateFile, line)) {
         lines.push_back(line + "\n");
-        if(trimm(line) == "{::}" && !foundStart) {
+        if(this->trim(line) == "{::}" && !foundStart) {
             this->startLine = index;
             foundStart = true;
         }

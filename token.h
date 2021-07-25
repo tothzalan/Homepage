@@ -21,4 +21,5 @@ class Tokens {
         Tokens(std::vector<std::string> lines);
     private:
         std::vector<Token> tokenizer(std::vector<std::string> lines);
+        std::string trim(std::string input);
 };

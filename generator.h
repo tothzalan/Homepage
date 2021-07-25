@@ -15,4 +15,6 @@ class Generator {
         std::vector<std::string> fileLines;
         std::string destFile;
         Template tlmp;
+        std::string createAnchor(std::string href, std::string text);
+        std::string createParagraph(std::string text);
 };

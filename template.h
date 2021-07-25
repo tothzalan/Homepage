@@ -12,4 +12,5 @@ class Template {
         Template(std::string fileName);
     private:
         std::vector<std::string> readInTemplate(std::string fileName);
+        std::string trim(std::string input);
 };
